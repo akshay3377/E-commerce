@@ -8,6 +8,8 @@ import {
   selectProductById,
 } from "../productListSlice";
 import { useParams } from "react-router-dom";
+import { addToCartAsync } from "../../cart/cartSlice";
+import { selectLoggedInUser } from "../../auth/authSlice";
 
 const colors = [
   { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
@@ -44,11 +46,15 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState(sizes[2]);
 
   const product = useSelector(selectProductById);
-
-  console.log(product);
+  const user = useSelector(selectLoggedInUser);
 
   const dispatch = useDispatch();
   const params = useParams();
+
+  const handleCart = (e) => {
+    e.preventDefault();
+    dispatch(addToCartAsync({ ...product, quantity: 1, user: user.id }));
+  };
 
   useEffect(() => {
     dispatch(fetchProductByIdAsync(params.id));
@@ -64,29 +70,28 @@ export default function ProductDetail() {
                 role="list"
                 className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
               >
-                {
-                  product?.breadcrumbs?.map((breadcrumb) => (
-                    <li key={breadcrumb.id}>
-                      <div className="flex items-center">
-                        <a
-                          href={breadcrumb.href}
-                          className="mr-2 text-sm font-medium text-gray-900"
-                        >
-                          {breadcrumb.name}
-                        </a>
-                        <svg
-                          width={16}
-                          height={20}
-                          viewBox="0 0 16 20"
-                          fill="currentColor"
-                          aria-hidden="true"
-                          className="h-5 w-4 text-gray-300"
-                        >
-                          <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                        </svg>
-                      </div>
-                    </li>
-                  ))}
+                {product?.breadcrumbs?.map((breadcrumb) => (
+                  <li key={breadcrumb.id}>
+                    <div className="flex items-center">
+                      <a
+                        href={breadcrumb.href}
+                        className="mr-2 text-sm font-medium text-gray-900"
+                      >
+                        {breadcrumb.name}
+                      </a>
+                      <svg
+                        width={16}
+                        height={20}
+                        viewBox="0 0 16 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        className="h-5 w-4 text-gray-300"
+                      >
+                        <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
+                      </svg>
+                    </div>
+                  </li>
+                ))}
                 <li className="text-sm">
                   <a
                     href={product.href}
@@ -170,7 +175,7 @@ export default function ProductDetail() {
                   </div>
                 </div>
 
-                <form className="mt-10">
+                <form className="mt-10" onSubmit={handleCart}>
                   {/* Colors */}
                   <div>
                     <h3 className="text-sm font-medium text-gray-900">Color</h3>

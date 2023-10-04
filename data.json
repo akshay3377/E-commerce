@@ -2084,6 +2084,17 @@
       "email": "workwithakshay777@gmail.com",
       "password": "123456aA",
       "id": 1
+    },
+    {
+      "email": "vopir59595@xgh6.com",
+      "password": "123456yY",
+      "id": 2
+    },
+    {
+      "email": "a@gmail.com",
+      "password": "123456aA",
+      "id": 3
     }
-  ]
+  ],
+  "cart": []
 }
