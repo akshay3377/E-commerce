@@ -30,7 +30,6 @@ export function updateCart(update) {
   });
 }
 
-
 export function deleteItemFromCart(itemId) {
   return new Promise(async (resolve) => {
     const response = await fetch(`http://localhost:8080/cart/${itemId}`, {
@@ -39,5 +38,17 @@ export function deleteItemFromCart(itemId) {
     });
     const data = await response.json();
     resolve({ data: { id: itemId } });
+  });
+}
+
+export async function resetCart(userId) {
+  return new Promise(async (resolve) => {
+    const response = await fetchItemsByUserId(userId);
+    const items = response.data;
+
+    for (let item of items) {
+      await deleteItemFromCart(item.id);
+    }
+    resolve({ status: "success" });
   });
 }
